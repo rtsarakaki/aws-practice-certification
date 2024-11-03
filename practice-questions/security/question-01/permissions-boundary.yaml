@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Template to create resources in aws
+
+# PERMISSIONS BOUNDARY
+
+Parameters:
+  UserPassword:
+    Description: "Password for the IAM user"
+    Type: String
+    NoEcho: true
+    
+Resources:
+  PermissionBoundary:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: TutorialPermissionBoundary
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - iam:Get*
+              - iam:List*
+            Resource: "*"
+
+  FullAccessPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: TutorialFullAccessPolicy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: "*"
+            Resource: "*"
+
+  UserWithPermissionsBoundary:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: "tutorial-user-with-permissions-boundary"
+      LoginProfile:
+        Password: !Ref UserPassword
+        PasswordResetRequired: false
+      PermissionsBoundary: !Ref PermissionBoundary
+      ManagedPolicyArns: 
+        - !Ref FullAccessPolicy # Uncomment for part 2
