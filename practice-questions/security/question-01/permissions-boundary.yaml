@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Template to create resources in aws
+Description: Template to create resources in aws to test permissions boundary
 
 # PERMISSIONS BOUNDARY
 

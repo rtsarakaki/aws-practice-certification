@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Template to create resources in aws to test identity based policy
+
+# IDENTITY BASED POLICY
+
+Parameters:
+  UserPassword:
+    Description: "Password for the IAM user"
+    Type: String
+    NoEcho: true
+    
+Resources:
+  # Uncomment for part 2
+  SQSFullAccessPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: TutorialSQSFullAccessPolicy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: "sqs:*"
+            Resource: "*"
+
+  UserWithIdentityBasedPolicy:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: "ttutorial-user-with-identity-based-policy"
+      LoginProfile:
+        Password: !Ref UserPassword
+        PasswordResetRequired: false
+      ManagedPolicyArns: 
+        - !Ref SQSFullAccessPolicy # Uncomment for part 2
