@@ -26,4 +26,4 @@ jobs:
       env:
         USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
       run: |
-        python manage-cloudformation-stacks.py
+        python practice-questions/security/question-01/manage-cloudformation-stacks.py
