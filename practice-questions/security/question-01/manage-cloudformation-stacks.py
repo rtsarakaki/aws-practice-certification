@@ -107,6 +107,7 @@ if __name__ == '__main__':
         create_stack(STACK_NAME_IDENTITY_BASED_POLICY, TEMPLATE_BODY_IDENTITY_BASED_POLICY)
         create_stack(STACK_NAME_ACL, TEMPLATE_BODY_ACL)
         upload_objects_with_acl()
+        
     except Exception as e:
         print(f'Error creating/updating the stack: {e}')
         raise
