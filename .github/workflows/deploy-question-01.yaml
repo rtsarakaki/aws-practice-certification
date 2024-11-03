@@ -7,7 +7,7 @@ on:
     types: [closed]
 
 jobs:
-  create_stacks:
+  create_permissions_boundary_stack:
     if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'develop'
     runs-on: ubuntu-latest
 
@@ -22,7 +22,6 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ vars.AWS_REGION }}
 
-
     - name: Create permissions boundary stack
       uses: ./actions/manage-cloudformation-stacks
       with:
@@ -31,6 +30,21 @@ jobs:
         aws_region: ${{ vars.AWS_REGION }}
         user_password: ${{ secrets.USER_PASSWORD }}
 
+  create_identity_based_policy_stack:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'develop'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ vars.AWS_REGION }}
+
     - name: Create identity based policy stack
       uses: ./actions/manage-cloudformation-stacks
       with:
@@ -38,6 +52,21 @@ jobs:
         template_path: "practice-questions/security/question-01/identity-based-policy.yaml"
         aws_region: ${{ vars.AWS_REGION }}
         user_password: ${{ secrets.USER_PASSWORD }}
+
+  create_acl_stack:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'develop'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ vars.AWS_REGION }}
 
     - name: Create ACL stack
       uses: ./actions/manage-cloudformation-stacks
@@ -48,7 +77,7 @@ jobs:
         user_password: ${{ secrets.USER_PASSWORD }}
 
   upload_objects:
-    needs: create_stacks
+    needs: create_acl_stack
     runs-on: ubuntu-latest
 
     steps:
