@@ -7,7 +7,7 @@ on:
     types: [closed]
 
 jobs:
-  deploy:
+  create_stacks:
     if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'develop'
     runs-on: ubuntu-latest
 
