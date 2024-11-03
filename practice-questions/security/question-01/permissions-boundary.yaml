@@ -43,4 +43,4 @@ Resources:
         PasswordResetRequired: false
       PermissionsBoundary: !Ref PermissionBoundary
       ManagedPolicyArns: 
-        - !Ref FullAccessPolicy # Uncomment for part 2
+        - !Ref FullAccessPolicy

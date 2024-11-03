@@ -10,7 +10,6 @@ Parameters:
     NoEcho: true
     
 Resources:
-  # Uncomment for part 2
   SQSFullAccessPolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
