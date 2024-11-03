@@ -22,6 +22,10 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ vars.AWS_REGION }}
 
+    - name: Install dependencies
+      run: |
+        pip install boto3
+
     - name: Run manage resources script
       env:
         USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
