@@ -28,18 +28,24 @@ jobs:
       with:
         stack_name: "question01-permissions-boundary-stack"
         template_path: "practice-questions/security/question-01/permissions-boundary.yaml"
+        aws_region: ${{ vars.AWS_REGION }}
+        user_password: ${{ secrets.USER_PASSWORD }}
 
     - name: Create identity based policy stack
       uses: ./actions/manage-cloudformation-stacks
       with:
         stack_name: "question01-identity-based-policy-stack"
         template_path: "practice-questions/security/question-01/identity-based-policy.yaml"
+        aws_region: ${{ vars.AWS_REGION }}
+        user_password: ${{ secrets.USER_PASSWORD }}
 
     - name: Create ACL stack
       uses: ./actions/manage-cloudformation-stacks
       with:
         stack_name: "question01-acl"
         template_path: "practice-questions/security/question-01/acl.yaml"
+        aws_region: ${{ vars.AWS_REGION }}
+        user_password: ${{ secrets.USER_PASSWORD }}
 
   upload_objects:
     needs: create_stacks
