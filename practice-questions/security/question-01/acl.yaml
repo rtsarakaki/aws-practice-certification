@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Template to create resources in aws
+
+Parameters:
+  UserPassword:
+    Description: "Password for the IAM user"
+    Type: String
+    NoEcho: true
+
+Resources:
+  ACLS3ReadonlyAccessPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: TutorialAclS3ReadonlyAccessPolicy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:Get*
+              - s3:List*
+            Resource: "*"
+
+  S3BucketWithACL:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub example-bucket-with-acl-${AWS::AccountId}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        IgnorePublicAcls: false
+        BlockPublicPolicy: true
+        RestrictPublicBuckets: true
+
+  S3BucketWithoutACL:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub example-bucket-without-acl-${AWS::AccountId}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        RestrictPublicBuckets: true
+
+  UserACLTest:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: "tutorial-user-acl-test"
+      LoginProfile:
+        Password: !Ref UserPassword
+        PasswordResetRequired: false
+      ManagedPolicyArns: 
+        - !Ref FullAccessPolicy
+
+  UserPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: AllowS3ReadAccess
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - s3:GetObject
+            Resource: 
+              - !Sub "arn:aws:s3:::example-bucket-with-acl/*"
+              - !Sub "arn:aws:s3:::example-bucket-without-acl/*"
+      Users:
+        - !Ref UserACLTest
