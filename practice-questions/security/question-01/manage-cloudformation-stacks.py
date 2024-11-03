@@ -1,5 +1,6 @@
 import boto3
 import os
+from botocore.exceptions import ClientError
 
 # Configurations
 STACK_NAME_PERMISSIONS_BOUNDARY = 'question01-permissions-boundary-stack'
@@ -16,19 +17,26 @@ def create_stack(stack_name, template_body):
     try:
         cf_client.describe_stacks(StackName=stack_name)
         print(f'Stack {stack_name} already exists. Updating stack...')
-        cf_client.update_stack(
-            StackName=stack_name,
-            TemplateBody=template_body,
-            Parameters=[
-                {
-                    'ParameterKey': 'UserPassword',
-                    'ParameterValue': USER_PASSWORD,
-                    'UsePreviousValue': False
-                }
-            ],
-            Capabilities=['CAPABILITY_NAMED_IAM']
-        )
-        waiter = cf_client.get_waiter('stack_update_complete')
+        try: 
+            cf_client.update_stack(
+                StackName=stack_name,
+                TemplateBody=template_body,
+                Parameters=[
+                    {
+                        'ParameterKey': 'UserPassword',
+                        'ParameterValue': USER_PASSWORD,
+                        'UsePreviousValue': False
+                    }
+                ],
+                Capabilities=['CAPABILITY_NAMED_IAM']
+            )
+            waiter = cf_client.get_waiter('stack_update_complete')
+            print(f'Stack {stack_name} updated successfully.')
+        except ClientError as e:
+            if 'No updates are to be performed' in str(e):
+                print(f'Stack {stack_name} has no updates to be performed.')
+            else:
+                raise        
     except cf_client.exceptions.ClientError as e:
         if 'does not exist' in str(e):
             print(f'Criando stack {stack_name}...')
