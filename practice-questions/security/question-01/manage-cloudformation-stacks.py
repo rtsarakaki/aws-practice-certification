@@ -31,6 +31,7 @@ def create_stack(stack_name, template_body):
                 Capabilities=['CAPABILITY_NAMED_IAM']
             )
             waiter = cf_client.get_waiter('stack_update_complete')
+            waiter.wait(StackName=stack_name)
             print(f'Stack {stack_name} updated successfully.')
         except ClientError as e:
             if 'No updates are to be performed' in str(e):
@@ -52,10 +53,10 @@ def create_stack(stack_name, template_body):
                 Capabilities=['CAPABILITY_NAMED_IAM']
             )
             waiter = cf_client.get_waiter('stack_create_complete')
+            waiter.wait(StackName=stack_name)
+            print(f'Stack {stack_name} created successfully.')
         else:
             raise
-    waiter.wait(StackName=stack_name)
-    print(f'Stack {stack_name} created/updated successfully.')
 
 if __name__ == '__main__':
     try:
