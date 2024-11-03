@@ -4,6 +4,8 @@ import os
 # Configurations
 STACK_NAME_PERMISSIONS_BOUNDARY = 'question01-permissions-boundary-stack'
 TEMPLATE_BODY_PERMISSIONS_BOUNDARY = open('permissions-boundary.yaml', 'r').read()
+STACK_NAME_IDENTITY_BASED_POLICY = 'question01-identity-based-policy-stack'
+TEMPLATE_BODY_IDENTITY_BASED_POLICY = open('identity-based-policy.yaml', 'r').read()
 REGION = 'us-east-1'
 USER_PASSWORD = os.getenv('USER_PASSWORD')  # get password from environment variable
 
@@ -50,6 +52,7 @@ def create_stack(stack_name, template_body):
 if __name__ == '__main__':
     try:
         create_stack(STACK_NAME_PERMISSIONS_BOUNDARY, TEMPLATE_BODY_PERMISSIONS_BOUNDARY)
+        create_stack(STACK_NAME_IDENTITY_BASED_POLICY, TEMPLATE_BODY_IDENTITY_BASED_POLICY)
     except Exception as e:
         print(f'Erro ao criar/atualizar a stack: {e}')
         raise
