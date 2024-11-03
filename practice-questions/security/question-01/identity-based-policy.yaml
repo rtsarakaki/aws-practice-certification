@@ -25,7 +25,7 @@ Resources:
   UserWithIdentityBasedPolicy:
     Type: AWS::IAM::User
     Properties:
-      UserName: "ttutorial-user-with-identity-based-policy"
+      UserName: "tutorial-user-with-identity-based-policy"
       LoginProfile:
         Password: !Ref UserPassword
         PasswordResetRequired: false
