@@ -23,7 +23,6 @@ Resources:
               - iam:List*
             Resource: "*"
 
-  # Uncomment for part 2
   FullAccessPolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
@@ -35,14 +34,13 @@ Resources:
             Action: "*"
             Resource: "*"
 
-  TutorialUser:
+  UserWithPermissionsBoundary:
     Type: AWS::IAM::User
     Properties:
-      UserName: "tutorial-user"
+      UserName: "tutorial-user-with-permissions-boundary"
       LoginProfile:
         Password: !Ref UserPassword
         PasswordResetRequired: false
       PermissionsBoundary: !Ref PermissionBoundary
-      # Uncomment for part 2
       ManagedPolicyArns: 
         - !Ref FullAccessPolicy # Uncomment for part 2
