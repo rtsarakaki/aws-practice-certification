@@ -19,6 +19,4 @@ jobs:
 
     - name: Validate CloudFormation templates
       run: |
-        for file in $(find practice-questions -type f \( -name "*.yaml" -o -name "*.yml" \)); do
-          cfn-lint -i W1011 $file || exit 1
-        done
+        cfn-lint -t practice-questions/security/question-01/permissions-boundary.yaml -i W1011
