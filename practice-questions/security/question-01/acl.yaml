@@ -49,7 +49,7 @@ Resources:
         Password: !Ref UserPassword
         PasswordResetRequired: false
       ManagedPolicyArns: 
-        - !Ref FullAccessPolicy
+        - !Ref ACLS3ReadonlyAccessPolicy
 
   UserPolicy:
     Type: AWS::IAM::Policy
@@ -62,7 +62,7 @@ Resources:
             Action:
               - s3:GetObject
             Resource: 
-              - !Sub "arn:aws:s3:::example-bucket-with-acl/*"
-              - !Sub "arn:aws:s3:::example-bucket-without-acl/*"
+              - "arn:aws:s3:::example-bucket-with-acl/*"
+              - "arn:aws:s3:::example-bucket-without-acl/*"
       Users:
         - !Ref UserACLTest
