@@ -7,9 +7,18 @@ inputs:
   template_path:
     description: "The path to the CloudFormation template"
     required: true
+  aws_region:
+    description: "The AWS region"
+    required: true
+  user_password:
+    description: "The password for the IAM user"
+    required: true
 runs:
   using: "docker"
   image: "Dockerfile"
+  env:
+    AWS_REGION: ${{ inputs.aws_region }}
+    USER_PASSWORD: ${{ inputs.user_password }}
   args:
     - "${{ inputs.stack_name }}"
     - "${{ inputs.template_path }}"
