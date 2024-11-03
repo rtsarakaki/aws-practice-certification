@@ -1,0 +1,22 @@
+name: Validate CloudFormation Templates
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install cfn-lint
+      run: |
+        pip install cfn-lint
+
+    - name: Validate CloudFormation templates
+      run: |
+        find practice-questions -type f \( -name "*.yaml" -o -name "*.yml" \) -exec cfn-lint {} +
