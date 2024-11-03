@@ -22,13 +22,41 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ vars.AWS_REGION }}
 
-    - name: Install dependencies
-      run: |
-        pip install boto3
 
-    - name: Run manage resources script
-      env:
-        USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
+    - name: Create permissions boundary stack
+      uses: ./actions/manage-cloudformation-stacks
+      with:
+        stack_name: "question01-permissions-boundary-stack"
+        template_path: "practice-questions/security/question-01/permissions-boundary.yaml"
+
+    - name: Create identity based policy stack
+      uses: ./actions/manage-cloudformation-stacks
+      with:
+        stack_name: "question01-identity-based-policy-stack"
+        template_path: "practice-questions/security/question-01/identity-based-policy.yaml"
+
+    - name: Create ACL stack
+      uses: ./actions/manage-cloudformation-stacks
+      with:
+        stack_name: "question01-acl"
+        template_path: "practice-questions/security/question-01/acl.yaml"
+
+  upload_objects:
+    needs: create_stacks
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ vars.AWS_REGION }}
+
+    - name: Run ACL upload script
       run: |
-        cd practice-questions/security/question-01
-        python manage-cloudformation-stacks.py
+        chmod +x practice-questions/security/question-01/acl-upload-objects.sh
+        practice-questions/security/question-01/acl-upload-objects.sh

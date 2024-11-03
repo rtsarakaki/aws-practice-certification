@@ -1,0 +1,15 @@
+name: "Manage CloudFormation Stacks"
+description: "Create or update a CloudFormation stack"
+inputs:
+  stack_name:
+    description: "The name of the CloudFormation stack"
+    required: true
+  template_path:
+    description: "The path to the CloudFormation template"
+    required: true
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  args:
+    - "${{ inputs.stack_name }}"
+    - "${{ inputs.template_path }}"
