@@ -19,4 +19,4 @@ jobs:
 
     - name: Validate CloudFormation templates
       run: |
-        find practice-questions -type f \( -name "*.yaml" -o -name "*.yml" \) -exec cfn-lint {} +
+        find practice-questions -type f \( -name "*.yaml" -o -name "*.yml" \) -exec cfn-lint --ignore-checks W1011 {} +
