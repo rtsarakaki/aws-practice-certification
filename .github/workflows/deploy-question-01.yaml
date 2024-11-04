@@ -94,7 +94,7 @@ jobs:
     - name: Create SCP stack
       uses: ./actions/manage-cloudformation-stacks
       with:
-        stack_name: "test-scp-stack"
+        stack_name: "question01-scp"
         template_path: "practice-questions/security/question-01/scp.yaml"
         aws_region: ${{ vars.AWS_REGION }}
         user_password: ${{ secrets.USER_PASSWORD }}
