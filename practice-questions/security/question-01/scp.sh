@@ -22,3 +22,7 @@ else
   echo "Inviting account $TARGET_ACCOUNT_ID to the organization..."
   aws organizations invite-account-to-organization --target Id=$TARGET_ACCOUNT_ID,Type=ACCOUNT --notes "Invitation to join organization"
 fi
+
+# Apply the SCP to the target account
+SCP_POLICY_ID=$(aws organizations list-policies --filter SERVICE_CONTROL_POLICY --query "Policies[?Name=='ScpDenyS3'].Id" --output text)
+aws organizations attach-policy --policy-id $SCP_POLICY_ID --target-id $TARGET_ACCOUNT_ID
