@@ -8,7 +8,7 @@ ORG_STATUS=$(aws organizations describe-organization --query 'Organization.Id' -
 
 if [[ $ORG_STATUS == *"AWSOrganizationsNotInUseException"* ]]; then
   echo "Creating organization..."
-  aws organizations create-organization --feature-set ALL
+  aws organizations.create-organization --feature-set ALL
 else
   echo "Organization already exists. Skipping creation."
 fi
@@ -17,7 +17,9 @@ fi
 ACCOUNT_STATUS=$(aws organizations list-accounts --query "Accounts[?Id=='$TARGET_ACCOUNT_ID'].Status" --output text)
 
 if [[ $ACCOUNT_STATUS == "ACTIVE" ]]; then
-  echo "Account $TARGET_ACCOUNT_ID is already part of the organization. Skipping invitation."
+  echo "Account $TARGET_ACCOUNT_ID is already part of the organization. Associating SCP..."
+  SCP_POLICY_ID=$(aws organizations list-policies --filter SERVICE_CONTROL_POLICY --query "Policies[?Name=='ScpDenyS3'].Id" --output text)
+  aws organizations attach-policy --policy-id $SCP_POLICY_ID --target-id $TARGET_ACCOUNT_ID
 else
   echo "Inviting account $TARGET_ACCOUNT_ID to the organization..."
   INVITATION=$(aws organizations invite-account-to-organization --target Id=$TARGET_ACCOUNT_ID,Type=ACCOUNT --notes "Invitation to join organization")
