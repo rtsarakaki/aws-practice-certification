@@ -20,9 +20,9 @@ if [[ $ACCOUNT_STATUS == "ACTIVE" ]]; then
   echo "Account $TARGET_ACCOUNT_ID is already part of the organization. Skipping invitation."
 else
   echo "Inviting account $TARGET_ACCOUNT_ID to the organization..."
-  aws organizations invite-account-to-organization --target Id=$TARGET_ACCOUNT_ID,Type=ACCOUNT --notes "Invitation to join organization"
-fi
+  INVITATION=$(aws organizations invite-account-to-organization --target Id=$TARGET_ACCOUNT_ID,Type=ACCOUNT --notes "Invitation to join organization")
+  HANDSHAKE_ID=$(echo $INVITATION | jq -r '.Handshake.Id')
 
-# Apply the SCP to the target account
-SCP_POLICY_ID=$(aws organizations list-policies --filter SERVICE_CONTROL_POLICY --query "Policies[?Name=='ScpDenyS3'].Id" --output text)
-aws organizations attach-policy --policy-id $SCP_POLICY_ID --target-id $TARGET_ACCOUNT_ID
+  # Save the handshake ID for future reference
+  echo "HANDSHAKE_ID=$HANDSHAKE_ID" >> $GITHUB_ENV
+fi
