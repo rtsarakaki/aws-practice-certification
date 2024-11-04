@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Template to create resources in aws
+
+Parameters:
+  UserPassword:
+    Description: "Password for the IAM user"
+    Type: String
+    NoEcho: true
+
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub example-bucket-scp-${AWS::AccountId}
+
+  UserScpTest:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: "tutorial-user-scp-test"
+      LoginProfile:
+        Password: !Ref UserPassword
+        PasswordResetRequired: false
+
+  FullAccessPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: FullAccessPolicy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: "*"
+            Resource: "*"
+      Users:
+        - !Ref TutorialUser
