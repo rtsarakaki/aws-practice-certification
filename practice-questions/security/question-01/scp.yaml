@@ -1,6 +1,12 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Template to create an SCP that denies access to S3
 
+Parameters:
+  UserPassword:
+    Description: "Password for the IAM user"
+    Type: String
+    NoEcho: true
+    
 Resources:
   ScpDenyS3:
     Type: AWS::Organizations::Policy
