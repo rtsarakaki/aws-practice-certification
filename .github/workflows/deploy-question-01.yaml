@@ -76,6 +76,29 @@ jobs:
         aws_region: ${{ vars.AWS_REGION }}
         user_password: ${{ secrets.USER_PASSWORD }}
 
+  create_scp_stack:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'develop'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ vars.AWS_REGION }}
+
+    - name: Create SCP stack
+      uses: ./actions/manage-cloudformation-stacks
+      with:
+        stack_name: "test-scp-stack"
+        template_path: "practice-questions/security/question-01/scp.yaml"
+        aws_region: ${{ vars.AWS_REGION }}
+        user_password: ${{ secrets.USER_PASSWORD }}
+
   upload_objects:
     needs: create_acl_stack
     runs-on: ubuntu-latest
@@ -95,3 +118,25 @@ jobs:
       run: |
         chmod +x practice-questions/security/question-01/acl-upload-objects.sh
         practice-questions/security/question-01/acl-upload-objects.sh
+
+  create_org_and_invite:
+    needs: create_scp_stack
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ vars.AWS_REGION }}
+
+    - name: Run SCP script
+      env:
+        TARGET_ACCOUNT_ID: ${{ secrets.TARGET_ACCOUNT_ID }}
+      run: |
+        chmod +x practice-questions/security/question-01/scp.sh
+        practice-questions/security/question-01/scp.sh
