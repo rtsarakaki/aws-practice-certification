@@ -13,4 +13,10 @@ repos:
     hooks:
     -   id: cfn-python-lint
         files: \.(json|yaml|yml)$
-        exclude: \.pre-commit-config\.yaml$
+        exclude: \.pre-commit-config\.yaml$|cz\.yaml$
+
+-   repo: https://github.com/commitizen-tools/commitizen
+    rev: v2.17.12  # Use a versão mais recente
+    hooks:
+    -   id: commitizen
+        stages: [commit-msg]
