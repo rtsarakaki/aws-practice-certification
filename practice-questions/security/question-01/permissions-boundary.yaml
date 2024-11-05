@@ -8,7 +8,7 @@ Parameters:
     Description: "Password for the IAM user"
     Type: String
     NoEcho: true
-    
+
 Resources:
   PermissionBoundary:
     Type: AWS::IAM::ManagedPolicy
@@ -42,5 +42,5 @@ Resources:
         Password: !Ref UserPassword
         PasswordResetRequired: false
       PermissionsBoundary: !Ref PermissionBoundary
-      ManagedPolicyArns: 
+      ManagedPolicyArns:
         - !Ref FullAccessPolicy
